@@ -5,8 +5,8 @@ Syd is planned to have a number of components:
 
 1. A Voice Synthesis Module
 2. A Voice/Speech Recognition Module
-3. A "Cognitive" Module (which will likely just be limited to understanding simple commands that have been fed in from the voice/speech recognizer  )
-4. An Emotion/Mood Recognizing Module
+3. An Emotion/Mood Recognizing Module
+4. A "Cognitive" Module (which will likely just be limited to understanding simple commands that have been fed in from the voice/speech recognizer and emotion/mood recognizer )
 5. A Module for Browsing Music from a Platform/ different Platforms
 6. A Song Recognizing Module (for songs that Syd has learned)
 7. A Set of Modules for Analysing Music (genre, artists, rythm etc.)
