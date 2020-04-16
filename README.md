@@ -18,5 +18,5 @@ Only tested on MacOS Catalina.
 
 ### Installation:
 
-1. Download from Releases
+1. Download v0.0.1 from Releases
 2. Run with julia from **inside the src**
