@@ -14,7 +14,7 @@ Only tested on MacOS Catalina.
 
 1. Download Julia 1.4
     1.0  Launch Julia
-    1.1. Hit ] then type `add "https://github.com/JuliaAudio/PortAudio.jl.git,LibSndFile, SampledSignals`"
+    1.1. Hit ] then type `add "https://github.com/JuliaAudio/PortAudio.jl.git,LibSndFile, SampledSignals, FileIO`"
 2. Install Brew
     2.0  `brew install sox`
 

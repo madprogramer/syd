@@ -12,7 +12,7 @@ louderThanNoise(x) = x > 0.01
 square(x) = x^2;
 
 function waitAndListen(from)
-	println("Waiting")
+	println("Come on say something!")
 	attention = false
 	currentDuration = 0s
 

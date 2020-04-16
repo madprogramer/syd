@@ -22,6 +22,7 @@ function basic()
 	# SydEar.startListening(InputName)
 	# SydMouth.say(OutputName,"Goo DAY")
 	#SydEar.startListening(InputName)
+	println("READY!")
 	while true
 		SydNerves.understand(SydEar.waitAndListen(InputName))
 	end

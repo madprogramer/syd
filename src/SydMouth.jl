@@ -6,8 +6,8 @@ export say, sing
 
 function say(to, text)
 	println("Saying: $text")
-	# run(`osascript AppleScripts/Speaker.applescript $text`)
-	run(`osascript src/AppleScripts/Speaker.applescript $text`)
+	run(`osascript AppleScripts/Speaker.applescript $text`)
+	# run(`osascript src/AppleScripts/Speaker.applescript $text`)
 end
 
 function sing(to, song)
