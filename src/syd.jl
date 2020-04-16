@@ -13,6 +13,7 @@ using .SydMouth
 function basic()
 	#SydEar.startListening()
 	SydMouth.say("G'DAY")
+	SydEar.startListening()
 end
 
 #Main Function Call
