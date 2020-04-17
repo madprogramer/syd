@@ -1,5 +1,11 @@
 module SydBrain
 
+#Imports
+include("./Vocabulary.jl")
+
+#Import Namespaces
+using .Vocabulary
+
 export comprehend
 
 #Levenshtein Distance
@@ -40,7 +46,7 @@ function semantics(words::AbstractString)
 	missingLetters = 0
 	#Clip on start
 	if candidates[1]
-		newWords = string(newWords,"PLAY ")
+		newWords = newWords*"PLAY "
 		missingLetters = 4
 		#Catch missing letters
 	else
@@ -54,22 +60,22 @@ function semantics(words::AbstractString)
 		#println(missingLetters)
 		#No Frame in sight
 		if !candidates[i-1] && !candidates[i]
-			newWords = string(newWords,words[i+length("**play**")-1])
+			newWords = newWords * words[i+length("**play**")-1]
 			continue
 		#Entered Frame
 		elseif !candidates[i-1] && candidates[i]
 			#Delete preceeding
-			newWords = string(newWords[1:findlast(' ',newWords)],"PLAY ")
+			newWords = newWords[1:findlast(' ',newWords)] * "PLAY "
 			continue
 		#Leaving Frame
 		elseif candidates[i-1] && !candidates[i] 
 			#newWords = string(newWords,words[i])
 			if missingLetters > 0
-				println("SNEAKING IN:",words[length("**play**")-missingLetters:i+length("**play**")-1] )
-				newWords = string(newWords,words[length("**play**")-missingLetters:i+length("**play**")-1])
+				# println("SNEAKING IN:",words[length("**play**")-missingLetters:i+length("**play**")-1] )
+				newWords = newWords * words[length("**play**")-missingLetters:i+length("**play**")-1]
 				missingLetters = 0
 			else
-				newWords = string(newWords,words[i+length("**play**")-1])
+				newWords = newWords * words[i+length("**play**")-1]
 			end
 
 			continue
