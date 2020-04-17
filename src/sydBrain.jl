@@ -21,6 +21,8 @@ function semantics(words::AbstractString)
 	#println(length.((words, "**play**")))
 
 	N = length(words)-length("**play**")+1
+	#Too short recording
+	if N < 1 return "" end
 	distances = zeros(N)
 
 	# for i in 1:N
