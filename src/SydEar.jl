@@ -11,6 +11,8 @@ export waitAndListen
 louderThanNoise(x) = x > 0.01
 square(x) = x^2;
 
+#Wait until syd hears a sound
+#Then begin capturing 0.5second frames for a maximum of 5 seconds
 function waitAndListen(from)
 	println("Come on say something!")
 	attention = false
