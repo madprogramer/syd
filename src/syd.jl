@@ -5,9 +5,9 @@ InputName = "Built-in Microphone"
 OutputName = "Built-in Output"
 
 #Imports
-include("./SydEar.jl")
-include("./SydMouth.jl")
-include("./SydNerves.jl")
+include("./sydEar.jl")
+include("./sydMouth.jl")
+include("./sydNerves.jl")
 
 #Import Namespaces
 using .SydEar
