@@ -17,7 +17,8 @@ See [logs](/logs) for more details.
 2. Install [Homebrew](https://brew.sh)
     2.1  Execute `brew install sox`
 
-### Installation:
+### Usage:
 
-1. Download v0.0.1 from Releases
-2. Run with julia from **inside the src**
+1. Download v0.0.2 from Releases
+2. Make sure iTunes/Apple Music is launched.
+3. Run with julia from **inside the src**
