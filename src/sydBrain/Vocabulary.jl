@@ -1,6 +1,6 @@
 module Vocabulary
 
-export Word, Words
+export sydWord, Words
 
 FuzzyWordString(a,b,c)=  ('*'^b) * a * ('*'^c)
 
@@ -14,7 +14,7 @@ FuzzyWordString(a,b,c)=  ('*'^b) * a * ('*'^c)
 #FrontFuzziness: Front Tolerance (of lip-smacking, gliding an initial vowel etc.)
 #TrailFuzziness: Back Tolerance (of nasalizing etc.)
 
-mutable struct Word
+mutable struct sydWord
     WORD::String
     radical::String
     frontFuzziness::Int
@@ -22,24 +22,24 @@ mutable struct Word
     tolerance::Int
     fuzzyWordString::String
 
-    function Word(a)
+    function sydWord(a)
     new(uppercase(a), a, 2, 2, 2, FuzzyWordString(a,2,2)) 
     end   
 
-    function Word(a, c, d)
+    function sydWord(a, c, d)
     new(uppercase(a), a, c, d, 2, FuzzyWordString(a,c,d)) 
     end   
 
-    function Word(a, b, c, d)
+    function sydWord(a, b, c, d)
     new(a, b, c, d, 2, FuzzyWordString(a,c,d)) 
     end   
 
-    function Word(a, b, c, d, e3)
+    function sydWord(a, b, c, d, e3)
     new(a, b, c, d, e, FuzzyWordString(a,c,d)) 
     end   
 end
 
-Words = [Word("play"),Word("pause")]
+Words = [sydWord("play"),sydWord("pause")]
 
 end
 

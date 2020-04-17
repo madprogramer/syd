@@ -2,6 +2,8 @@ module SydBrain
 
 #Imports
 include("./Vocabulary.jl")
+include("./States.jl")
+include("./Commands.jl")
 
 #Import Namespaces
 using .Vocabulary
@@ -29,7 +31,7 @@ function semantics(speech::AbstractString)
 end
 
 #Pick Out occurences of a word in The Speech
-function pickOut(words::AbstractString, target::Word)
+function pickOut(words::AbstractString, target::sydWord)
 
 	#Highlight words which might be "play"
 	#println(length.((words, "**play**")))
