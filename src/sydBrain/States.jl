@@ -1,5 +1,7 @@
 module States
 
-export sydState
+export SydState, startUp, idle, playingSong, pausedSong
 
-@enum sydState idle=1 playingSong=2 
+@enum SydState startUp idle playingSong pausedSong
+
+end

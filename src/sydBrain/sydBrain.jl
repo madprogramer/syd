@@ -1,5 +1,4 @@
 module SydBrain
-
 #Imports
 include("./Vocabulary.jl")
 include("./States.jl")
@@ -7,8 +6,17 @@ include("./Commands.jl")
 
 #Import Namespaces
 using .Vocabulary
+using .States
+using .Commands
 
-export comprehend
+export comprehend, wakeUp
+
+#Variables in this scope
+MENTALSTATE = startUp
+
+function wakeUp()
+	MENTALSTATE = startUp
+end
 
 #Levenstein Distance
 #Using from https://rosettacode.org/wiki/Levenshtein_distance until I optimize this myself
@@ -163,6 +171,7 @@ end
 # 	return newWords
 # end
 
+
 #What to comprehend from these words?
 function comprehend(words::AbstractString)
 	comprehension = Dict{String,Any}()
@@ -178,6 +187,7 @@ function comprehend(words::AbstractString)
 
 	return comprehension
 end
+
 
 #For testing string related stuff
 function test(tests)

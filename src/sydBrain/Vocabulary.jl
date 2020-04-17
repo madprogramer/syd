@@ -2,7 +2,7 @@ module Vocabulary
 
 export sydWord, Words
 
-FuzzyWordString(a,b,c)=  ('*'^b) * a * ('*'^c)
+FuzzyWordString(a,b,c)=('*'^b) * a * ('*'^c)
 
 #NOTE!!! 
 #Don't forget to eventually move vocabulary into a json file!!!
@@ -31,15 +31,15 @@ mutable struct sydWord
     end   
 
     function sydWord(a, b, c, d)
-    new(a, b, c, d, 2, FuzzyWordString(a,c,d)) 
+    new(uppercase(a), a, b, c, d, FuzzyWordString(a,b,c)) 
     end   
 
-    function sydWord(a, b, c, d, e3)
+    function sydWord(a, b, c, d, e)
     new(a, b, c, d, e, FuzzyWordString(a,c,d)) 
     end   
 end
 
-Words = [sydWord("play"),sydWord("pause")]
+Words = [sydWord("play"),sydWord("pause"),sydWord("stop"),sydWord("hi",1,1,0),sydWord("yo",0,0,0),sydWord("hello")]
 
 end
 

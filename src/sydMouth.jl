@@ -6,7 +6,7 @@ export say, sing
 
 #Speak out a word
 function say(to, text)
-	println("Saying: $text")
+	#println("Saying: $text")
 	run(`osascript AppleScripts/Speaker.applescript $text`)
 	# run(`osascript src/AppleScripts/Speaker.applescript $text`)
 end
