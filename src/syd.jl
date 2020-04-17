@@ -33,6 +33,12 @@ end
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+function test()
+	read(`osascript AppleScripts/Pause.applescript`)
+	run(`osascript AppleScripts/Play.applescript`)
+end
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 #Take Action
 function act(state)
 
@@ -65,6 +71,9 @@ while true
 end
 end
 
+
 # basic()
 main()
+
+# test()
 end

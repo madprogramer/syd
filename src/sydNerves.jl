@@ -35,25 +35,30 @@ function respondTo(understanding,state)
 		end
 		if occursin("PLAY",heard)
 			SydMouth.say(OutputName,"Unfortunately, I dunno a whole lot of songs, but let me see what I can do.")
+			run(`osascript AppleScripts/Play.applescript`)
 			state="playingSong"
 		end
 	#PlayingSong
 	elseif state == "playingSong"
 		if occursin("PAUSE",heard)
+			run(`osascript AppleScripts/Pause.applescript`)
 			SydMouth.say(OutputName,"Ok, I paused.")
 			state="pausedSong"
 		end
 		if occursin("STOP",heard)
+			run(`osascript AppleScripts/Stop.applescript`)
 			SydMouth.say(OutputName,"As you wish.")
 			state="idle"
 		end
 	#PausedSong
 	elseif state == "pausedSong"
 		if occursin("PLAY",heard)
+			run(`osascript AppleScripts/Play.applescript`)
 			SydMouth.say(OutputName,"Continuing...")
 			state="playingSong"
 		end
 		if occursin("STOP",heard)
+			run(`osascript AppleScripts/Stop.applescript`)
 			SydMouth.say(OutputName,"As you wish")
 			state="idle"
 		end
