@@ -47,10 +47,10 @@ elseif state == "idle"
 	state = SydNerves.understand(SydEar.waitAndListen(InputName),state)
 #PlayingSong
 elseif state  == "playingSong"
-	println("Playing")
+	state = SydNerves.understand(SydEar.waitAndListen(InputName),state)
 #PausedSong
 elseif state == "pausedSong"
-	println("Paused")
+	state = SydNerves.understand(SydEar.waitAndListen(InputName),state)
 end
 
 #Return Last State

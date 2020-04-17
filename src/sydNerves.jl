@@ -39,10 +39,24 @@ function respondTo(understanding,state)
 		end
 	#PlayingSong
 	elseif state == "playingSong"
-		println("Playing")
+		if occursin("PAUSE",heard)
+			SydMouth.say(OutputName,"Ok, I paused.")
+			state="pausedSong"
+		end
+		if occursin("STOP",heard)
+			SydMouth.say(OutputName,"As you wish.")
+			state="idle"
+		end
 	#PausedSong
 	elseif state == "pausedSong"
-		println("Paused")
+		if occursin("PLAY",heard)
+			SydMouth.say(OutputName,"Continuing...")
+			state="playingSong"
+		end
+		if occursin("STOP",heard)
+			SydMouth.say(OutputName,"As you wish")
+			state="idle"
+		end
 	end
 
 	return state
