@@ -8,7 +8,7 @@ OutputName = "Built-in Output"
 using FileIO
 
 include("./sydMouth.jl")
-include("./sydBrain/*")
+include("./sydBrain/sydBrain.jl")
 #Import Namespaces
 using .SydMouth
 using .SydBrain
