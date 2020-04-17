@@ -7,9 +7,10 @@ FuzzyWordString(a,b,c)=  ('*'^b) * a * ('*'^c)
 #NOTE!!! 
 #Don't forget to eventually move vocabulary into a json file!!!
 
-#Each word is split into 4 components
+#Each word is split into 5 components
 #WORD: Semantic Representation of what syd understood something as (uppercase)
 #Radical: A phonological approximation (lowercase)
+#Tolerance: Variability allowed (increase for longer words)
 #FrontFuzziness: Front Tolerance (of lip-smacking, gliding an initial vowel etc.)
 #TrailFuzziness: Back Tolerance (of nasalizing etc.)
 

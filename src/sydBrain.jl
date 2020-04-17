@@ -8,7 +8,7 @@ using .Vocabulary
 
 export comprehend
 
-#Levenshtein Distance
+#Levenstein Distance
 #Using from https://rosettacode.org/wiki/Levenshtein_distance until I optimize this myself
 function levendist(s::AbstractString, t::AbstractString)
     ls, lt = length.((s, t))
@@ -21,7 +21,15 @@ function levendist(s::AbstractString, t::AbstractString)
 end
 
 #Semantics
-function semantics(words::AbstractString, target::Word)
+function semantics(speech::AbstractString)
+	for Word in Vocabulary.Words
+		speech = pickOut(speech, Word)
+	end
+	return speech
+end
+
+#Semantics
+function pickOut(words::AbstractString, target::Word)
 
 	#Highlight words which might be "play"
 	#println(length.((words, "**play**")))
@@ -29,9 +37,8 @@ function semantics(words::AbstractString, target::Word)
 	N = length(words)-length(target.fuzzyWordString)+1
 	L = length(target.fuzzyWordString)
 
-	println("MOVE THIS INTO THE OUTER LOOP")
-	#Too short recording
-	if N < 1 return "" end
+	#Too short recording for word to occur
+	if N < 1 return words end
 	distances = zeros(N)
 
 	distAtPosition(i) = levendist( words[i:L+i-1], target.fuzzyWordString) 
@@ -82,77 +89,77 @@ function semantics(words::AbstractString, target::Word)
 	return newWords
 end
 
-function semanticsLegacy(words::AbstractString)
+# function semanticsLegacy(words::AbstractString)
 
-	#Highlight words which might be "play"
-	#println(length.((words, "**play**")))
+# 	#Highlight words which might be "play"
+# 	#println(length.((words, "**play**")))
 
-	N = length(words)-length("**play**")+1
-	#Too short recording
-	if N < 1 return "" end
-	distances = zeros(N)
+# 	N = length(words)-length("**play**")+1
+# 	#Too short recording
+# 	if N < 1 return "" end
+# 	distances = zeros(N)
 
-	# for i in 1:N
-	#  	println( (words[i:length("**play**")+i-1] ,"**play**" ) )
-	# 	distances[i] = levendist( words[i:length("**play**")+i-1] ,"**play**" )
-	# end
-	distAtPosition(i) = levendist( words[i:length("**play**")+i-1] ,"**play**" ) 
-	positions = collect(1:N)
+# 	# for i in 1:N
+# 	#  	println( (words[i:length("**play**")+i-1] ,"**play**" ) )
+# 	# 	distances[i] = levendist( words[i:length("**play**")+i-1] ,"**play**" )
+# 	# end
+# 	distAtPosition(i) = levendist( words[i:length("**play**")+i-1] ,"**play**" ) 
+# 	positions = collect(1:N)
 
-	# distances = distAtPosition.(positions).-4
-	candidates = (distAtPosition.(positions).-4).<=2
-	# println(candidates)
+# 	# distances = distAtPosition.(positions).-4
+# 	candidates = (distAtPosition.(positions).-4).<=2
+# 	# println(candidates)
 
-	newWords = ""
-	missingLetters = 0
-	#Clip on start
-	if candidates[1]
-		newWords = newWords*"PLAY "
-		missingLetters = 4
-		#Catch missing letters
-	else
-		newWords = words[1:length("**play**")]
-	end
+# 	newWords = ""
+# 	missingLetters = 0
+# 	#Clip on start
+# 	if candidates[1]
+# 		newWords = newWords*"PLAY "
+# 		missingLetters = 4
+# 		#Catch missing letters
+# 	else
+# 		newWords = words[1:length("**play**")]
+# 	end
 
 
-	#Clip in between
-	for i in 2:length(candidates)
-		missingLetters = max(0,missingLetters-1)
-		#println(missingLetters)
-		#No Frame in sight
-		if !candidates[i-1] && !candidates[i]
-			newWords = newWords * words[i+length("**play**")-1]
-			continue
-		#Entered Frame
-		elseif !candidates[i-1] && candidates[i]
-			#Delete preceeding
-			newWords = newWords[1:findlast(' ',newWords)] * "PLAY "
-			continue
-		#Leaving Frame
-		elseif candidates[i-1] && !candidates[i] 
-			#newWords = string(newWords,words[i])
-			if missingLetters > 0
-				# println("SNEAKING IN:",words[length("**play**")-missingLetters:i+length("**play**")-1] )
-				newWords = newWords * words[length("**play**")-missingLetters:i+length("**play**")-1]
-				missingLetters = 0
-			else
-				newWords = newWords * words[i+length("**play**")-1]
-			end
+# 	#Clip in between
+# 	for i in 2:length(candidates)
+# 		missingLetters = max(0,missingLetters-1)
+# 		#println(missingLetters)
+# 		#No Frame in sight
+# 		if !candidates[i-1] && !candidates[i]
+# 			newWords = newWords * words[i+length("**play**")-1]
+# 			continue
+# 		#Entered Frame
+# 		elseif !candidates[i-1] && candidates[i]
+# 			#Delete preceeding
+# 			newWords = newWords[1:findlast(' ',newWords)] * "PLAY "
+# 			continue
+# 		#Leaving Frame
+# 		elseif candidates[i-1] && !candidates[i] 
+# 			#newWords = string(newWords,words[i])
+# 			if missingLetters > 0
+# 				# println("SNEAKING IN:",words[length("**play**")-missingLetters:i+length("**play**")-1] )
+# 				newWords = newWords * words[length("**play**")-missingLetters:i+length("**play**")-1]
+# 				missingLetters = 0
+# 			else
+# 				newWords = newWords * words[i+length("**play**")-1]
+# 			end
 
-			continue
-		#Inside Frame
-		else#if candidates[i-1] && candidates[i]
-			continue
-		end
-	end
+# 			continue
+# 		#Inside Frame
+# 		else#if candidates[i-1] && candidates[i]
+# 			continue
+# 		end
+# 	end
 
-	# #Clip at end
-	# if candidates[end]
-	# 	newWords = string(newWords,"PLAY")
-	# end
+# 	# #Clip at end
+# 	# if candidates[end]
+# 	# 	newWords = string(newWords,"PLAY")
+# 	# end
 
-	return newWords
-end
+# 	return newWords
+# end
 
 #What to comprehend from these words?
 function comprehend(words::AbstractString)
@@ -165,7 +172,7 @@ function comprehend(words::AbstractString)
 	comprehension["word count"] = count(i->(i==' '), words)+1
 	# comprehension["saidPlay"] = occursin("play", words)
 	# comprehension["saidPause"] = occursin("pause", words)
-	comprehension["semantics"] = semantics(words, Vocabulary.Words[1])
+	comprehension["semantics"] = semantics(words)
 
 	return comprehension
 end
@@ -187,6 +194,6 @@ end
 # 	"this is so sod\n","ah suh er migdt leke to go to de show\n","down me as some thing ar luoning usasha\n",
 # 	"cold iron hands cleff\n","nake our name like a ghost\n"])
 
- test(["i want to play game"])
+ # test(["i want to play game"])
 
 end
