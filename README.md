@@ -7,6 +7,7 @@ School project, let's see where it'll take us...
 ### Notes:
 
 Only tested on MacOS Catalina.
+See [logs](/logs) for more details.
 
 #### Prerequisites:
 
