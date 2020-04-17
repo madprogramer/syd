@@ -21,7 +21,68 @@ function levendist(s::AbstractString, t::AbstractString)
 end
 
 #Semantics
-function semantics(words::AbstractString)
+function semantics(words::AbstractString, target::Word)
+
+	#Highlight words which might be "play"
+	#println(length.((words, "**play**")))
+
+	N = length(words)-length(target.fuzzyWordString)+1
+	L = length(target.fuzzyWordString)
+
+	println("MOVE THIS INTO THE OUTER LOOP")
+	#Too short recording
+	if N < 1 return "" end
+	distances = zeros(N)
+
+	distAtPosition(i) = levendist( words[i:L+i-1], target.fuzzyWordString) 
+	positions = collect(1:N)
+	candidates = (distAtPosition.(positions).-(target.frontFuzziness + target.trailFuzziness)) .<= target.tolerance
+
+	newWords = ""
+	missingLetters = 0
+
+	#Clip on start
+	if candidates[1]
+		newWords = target.WORD*" "
+		missingLetters = length(target.radical)
+		#Catch missing letters
+	else
+		newWords = words[1:L]
+	end
+
+	#Clip in between
+	for i in 2:length(candidates)
+		missingLetters = max(0,missingLetters-1)
+		if !candidates[i-1] && !candidates[i]
+			newWords = newWords * words[i+L-1]
+			continue
+		#Entered Frame
+		elseif !candidates[i-1] && candidates[i]
+			#Delete preceeding
+			newWords = newWords[1:findlast(' ',newWords)] * target.WORD*" "
+			continue
+		#Leaving Frame
+		elseif candidates[i-1] && !candidates[i] 
+			#newWords = string(newWords,words[i])
+			if missingLetters > 0
+				# println("SNEAKING IN:",words[length("**play**")-missingLetters:i+length("**play**")-1] )
+				newWords = newWords * words[L-missingLetters:i+L-1]
+				missingLetters = 0
+			else
+				newWords = newWords * words[i+L-1]
+			end
+
+			continue
+		#Inside Frame
+		else#if candidates[i-1] && candidates[i]
+			continue
+		end
+	end
+
+	return newWords
+end
+
+function semanticsLegacy(words::AbstractString)
 
 	#Highlight words which might be "play"
 	#println(length.((words, "**play**")))
@@ -104,7 +165,7 @@ function comprehend(words::AbstractString)
 	comprehension["word count"] = count(i->(i==' '), words)+1
 	# comprehension["saidPlay"] = occursin("play", words)
 	# comprehension["saidPause"] = occursin("pause", words)
-	comprehension["semantics"] = semantics(words)
+	comprehension["semantics"] = semantics(words, Vocabulary.Words[1])
 
 	return comprehension
 end
@@ -126,6 +187,6 @@ end
 # 	"this is so sod\n","ah suh er migdt leke to go to de show\n","down me as some thing ar luoning usasha\n",
 # 	"cold iron hands cleff\n","nake our name like a ghost\n"])
 
-# test(["i want to play game"])
+ test(["i want to play game"])
 
 end

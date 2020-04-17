@@ -15,21 +15,26 @@ FuzzyWordString(a,b,c)=  ('*'^b) * a * ('*'^c)
 
 mutable struct Word
     WORD::String
-    Radical::String
-    FrontFuzziness::Int
-    TrailFuzziness::Int
-    FuzzyWordString::String
+    radical::String
+    frontFuzziness::Int
+    trailFuzziness::Int
+    tolerance::Int
+    fuzzyWordString::String
 
     function Word(a)
-    new(uppercase(a), a, 2, 2, FuzzyWordString(a,2,2)) 
+    new(uppercase(a), a, 2, 2, 2, FuzzyWordString(a,2,2)) 
     end   
 
     function Word(a, c, d)
-    new(uppercase(a), a, c, d, FuzzyWordString(a,c,d)) 
+    new(uppercase(a), a, c, d, 2, FuzzyWordString(a,c,d)) 
     end   
 
     function Word(a, b, c, d)
-    new(a, b, c, d, FuzzyWordString(a,c,d)) 
+    new(a, b, c, d, 2, FuzzyWordString(a,c,d)) 
+    end   
+
+    function Word(a, b, c, d, e3)
+    new(a, b, c, d, e, FuzzyWordString(a,c,d)) 
     end   
 end
 
