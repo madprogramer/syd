@@ -19,6 +19,7 @@ See [logs](/logs) for more details.
 
 ### Usage:
 
+!!!UPDATE THIS!!!
 1. Download v0.0.2 from Releases
 2. Make sure iTunes/Apple Music is launched.
 3. Run with 
