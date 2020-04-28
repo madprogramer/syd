@@ -1,2 +1,13 @@
+
+#Audio
 *.wav
+*.ogg
+
+#Storage
 *.bson
+
+#Models
+*.pb
+*.pbmm
+*.tflite
+*.trie
