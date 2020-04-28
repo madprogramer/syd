@@ -2,7 +2,7 @@ module SydMouth
 
 using PortAudio, SampledSignals, LibSndFile
 
-export say, sing
+#export say, sing
 
 #Speak out a word
 function say(to, text)
