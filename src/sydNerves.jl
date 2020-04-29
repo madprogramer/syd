@@ -6,6 +6,7 @@ OutputName = "Built-in Output"
 
 #Imports
 using FileIO
+using WAV
 include("./sydEar.jl")
 include("./sydMouth.jl")
 include("./sydBrain/sydBrain.jl")
@@ -17,6 +18,11 @@ using .SydMouth
 using .SydBrain
 using .Commands
 using .States
+
+
+#TEMP 
+include("./EmRec.jl")
+using .EmRec
 
 export wakeUp, respondTo
 
@@ -73,7 +79,7 @@ function understand(sound,state)
 	#SydMouth.sing(OutputName,sound)
 
 	# savefile = "DeepSpeech/audio/2830-3980-0043.wav"
-	savefile = "voicerecording.ogg"
+	savefile = "voicerecording.wav"
 	memorize(savefile, sound)
 
 	#location = read(`pwd`,String)
@@ -82,6 +88,7 @@ function understand(sound,state)
 	#println( testRun )
 	# wordsUnderstood = read(`DeepSpeech/deepspeech --model DeepSpeech/models/output_graph.pbmm --audio $savefile`, String)
 	# println( wordsUnderstood )
+	#emo = EmRec.detect(savefile)
 	comprehension = SydBrain.comprehend(read(`DeepSpeech/deepspeech --model DeepSpeech/models/output_graph.pbmm --audio $savefile`, String))
 	#SydMouth.say(OutputName,wordsUnderstood)
 	println(comprehension)
@@ -91,7 +98,11 @@ end
 
 #Save a recording to a file
 function memorize(filename, sound)
-	save(filename,sound)
+	#save(filename,sound)
+	#save("${filename}.ogg",sound)
+	#save("${filename}.wav",sound)
+	#wavwrite(sound, filename, Fs=16000)
+	wavwrite(sound, filename, Fs=44100)
 end
 
 # #Wake Up
