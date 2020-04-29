@@ -1,4 +1,4 @@
-module SydMouth
+module sydMouth
 
 using PortAudio, SampledSignals, LibSndFile
 
@@ -7,8 +7,8 @@ using PortAudio, SampledSignals, LibSndFile
 #Speak out a word
 function say(to, text)
 	#println("Saying: $text")
-	run(`osascript AppleScripts/Speaker.applescript $text`)
-	# run(`osascript src/AppleScripts/Speaker.applescript $text`)
+	println(pwd())
+	run(`osascript builtins/AppleScripts/Speaker.applescript $text`)
 end
 
 #Sing out a stream
