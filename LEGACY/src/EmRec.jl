@@ -15,6 +15,11 @@ struct Dense; w; b; f; end
 Dense(i::Int,o::Int,f=identity) = Dense(param(o,i), param0(o), f)
 (d::Dense)(x) = d.f.(d.w * mat(x,dims=1) .+ d.b)
 
+
+struct DenseRelu; w; b; f; end
+DenseRelu(i::Int,o::Int,f=relu) = DenseRelu(param(o,i), param0(o), f)
+(d::DenseRelu)(x) = d.f.(d.w * mat(x,dims=1) .+ d.b)
+
 module EmRec
 
 #INCLUDES
@@ -72,7 +77,8 @@ function detect(fileLoc)
     L = size(SAMPLES)[1]
 
 	#KNET LOAD BROKEN REPORT THIS!
-	Knet.@load "EmRec256.jld2"
+	#Knet.@load "EmRec256.jld2"
+    Knet.@load "BIGEMREC.jld2"
 	println(model)
 
 	#model = deserialize("EmRec160")
@@ -83,8 +89,20 @@ function detect(fileLoc)
 	#reshape(Xs[1],26,1,328)
 
 	#TAG
-	tag(model, 26, reshape(SAMPLES,26,1,L))
+	tags = tag(model, 26, reshape(SAMPLES,26,1,L))
 	#COUNT TAG
+
+    if L > 50
+        k = 50
+        while L >= k+50
+            #IF THERE IS MORE JOY IN THIS FRAME THAN NEUTRAL, DETECT JOY!
+            if( count( i->(i=="happy"), tags[k:k+50] ) / L > 0.5 ) 
+                return "joy"
+            end
+        end
+    end
+
+    return "neutral"
 end
 
 

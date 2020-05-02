@@ -1,3 +1,27 @@
+#TEMPORARY SOLUTION BEGIN
+
+using Knet: Knet, AutoGrad, gpu, param, param0, mat, RNN, relu, Data, adam, progress, nll, zeroone
+
+# chain of layers
+struct Chain
+    layers
+    Chain(layers...) = new(layers)
+end
+(c::Chain)(x) = (for l in c.layers; x = l(x); end; x)
+(c::Chain)(x,y) = nll(c(x),y)
+
+
+# Redefine dense layer 
+struct Dense; w; b; f; end
+Dense(i::Int,o::Int,f=identity) = Dense(param(o,i), param0(o), f)
+(d::Dense)(x) = d.f.(d.w * mat(x,dims=1) .+ d.b)
+
+struct DenseRelu; w; b; f; end
+DenseRelu(i::Int,o::Int,f=relu) = DenseRelu(param(o,i), param0(o), f)
+(d::DenseRelu)(x) = d.f.(d.w * mat(x,dims=1) .+ d.b)
+
+#TEMPORARY FIX END
+
 module syd
 
 #Imports
@@ -12,6 +36,10 @@ using .SydEar
 using .SydMouth
 using .SydNerves
 using .States
+
+
+#include("./EmRec.jl")
+#using .EmRec
 
 #Globals 
 InputName = "Built-in Microphone"

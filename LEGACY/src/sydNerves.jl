@@ -19,7 +19,6 @@ using .SydBrain
 using .Commands
 using .States
 
-
 #TEMP 
 include("./EmRec.jl")
 using .EmRec
@@ -28,7 +27,7 @@ export wakeUp, respondTo
 
 
 #RESPONSE
-function respondTo(understanding,state)
+function respondTo(understanding,state,emo)
 	#println("Should respond to $(understanding)")
 
 	heard = understanding["semantics"]
@@ -37,34 +36,40 @@ function respondTo(understanding,state)
 
 	if state == "idle"
 		if occursin("HELLO",heard) || occursin("HI",heard) || occursin("YO",heard)
-			SydMouth.say(OutputName,"Oh Hey!")
+			if emo == "joy":
+				SydMouth.say(OutputName,"You sure seem in good spirits today!")
+			else:
+				SydMouth.say(OutputName,"Oh Hey!")
 		end
 		if occursin("PLAY",heard)
 			SydMouth.say(OutputName,"Unfortunately, I dunno a whole lot of songs, but let me see what I can do.")
-			run(`osascript AppleScripts/Play.applescript`)
+			read(`osascript AppleScripts/Play.applescript`)
 			state="playingSong"
 		end
 	#PlayingSong
 	elseif state == "playingSong"
 		if occursin("PAUSE",heard)
-			run(`osascript AppleScripts/Pause.applescript`)
+			artistname = read(`osascript AppleScripts/GetArtist.applescript`)
+			read(`osascript AppleScripts/Pause.applescript`)
 			SydMouth.say(OutputName,"Ok, I paused.")
+			if emo == "joy":
+				SydMouth.say(OutputName,"You seem to like this song. It's by $(artistname). You might want to check them out.")
 			state="pausedSong"
 		end
 		if occursin("STOP",heard)
-			run(`osascript AppleScripts/Stop.applescript`)
+			read(`osascript AppleScripts/Stop.applescript`)
 			SydMouth.say(OutputName,"As you wish.")
 			state="idle"
 		end
 	#PausedSong
 	elseif state == "pausedSong"
 		if occursin("PLAY",heard)
-			run(`osascript AppleScripts/Play.applescript`)
+			read(`osascript AppleScripts/Play.applescript`)
 			SydMouth.say(OutputName,"Continuing...")
 			state="playingSong"
 		end
 		if occursin("STOP",heard)
-			run(`osascript AppleScripts/Stop.applescript`)
+			read(`osascript AppleScripts/Stop.applescript`)
 			SydMouth.say(OutputName,"As you wish")
 			state="idle"
 		end
@@ -88,12 +93,12 @@ function understand(sound,state)
 	#println( testRun )
 	# wordsUnderstood = read(`DeepSpeech/deepspeech --model DeepSpeech/models/output_graph.pbmm --audio $savefile`, String)
 	# println( wordsUnderstood )
-	#emo = EmRec.detect(savefile)
+	emo = EmRec.detect(savefile)
 	comprehension = SydBrain.comprehend(read(`DeepSpeech/deepspeech --model DeepSpeech/models/output_graph.pbmm --audio $savefile`, String))
 	#SydMouth.say(OutputName,wordsUnderstood)
 	println(comprehension)
 
-	return respondTo(comprehension,state)
+	return respondTo(comprehension,state,emo)
 end
 
 #Save a recording to a file
