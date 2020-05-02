@@ -12,3 +12,4 @@
 *.tflite
 *.trie
 
+notebooks/*.jld2

@@ -96,12 +96,14 @@ function detect(fileLoc)
         k = 50
         while L >= k+50
             #IF THERE IS MORE JOY IN THIS FRAME THAN NEUTRAL, DETECT JOY!
-            if( count( i->(i=="happy"), tags[k:k+50] ) / L > 0.5 ) 
+            #println(count( i->(i=="happy"), tags[k:k+50] ) / 50)
+            if count( i->(i=="happy"), tags[k:k+50] ) / 50 > 0.5  
                 return "joy"
             end
+
+            k+=50
         end
     end
-
     return "neutral"
 end
 
@@ -110,6 +112,6 @@ function test(fileLoc)
 	println(detect(fileLoc))
 end
 
-test("etsworking.wav")
+# test("etsworking.wav")
 
 end
