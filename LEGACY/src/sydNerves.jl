@@ -36,13 +36,15 @@ function respondTo(understanding,state,emo)
 
 	if state == "idle"
 		if occursin("HELLO",heard) || occursin("HI",heard) || occursin("YO",heard)
-			if emo == "joy":
+			if emo == "joy"
 				SydMouth.say(OutputName,"You sure seem in good spirits today!")
-			else:
+			else
 				SydMouth.say(OutputName,"Oh Hey!")
+			end
 		end
 		if occursin("PLAY",heard)
 			SydMouth.say(OutputName,"Unfortunately, I dunno a whole lot of songs, but let me see what I can do.")
+			read(`osascript AppleScripts/Play.applescript`)
 			read(`osascript AppleScripts/Play.applescript`)
 			state="playingSong"
 		end
@@ -52,8 +54,9 @@ function respondTo(understanding,state,emo)
 			artistname = read(`osascript AppleScripts/GetArtist.applescript`)
 			read(`osascript AppleScripts/Pause.applescript`)
 			SydMouth.say(OutputName,"Ok, I paused.")
-			if emo == "joy":
+			if emo == "joy"
 				SydMouth.say(OutputName,"You seem to like this song. It's by $(artistname). You might want to check them out.")
+			end
 			state="pausedSong"
 		end
 		if occursin("STOP",heard)
