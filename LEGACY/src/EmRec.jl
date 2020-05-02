@@ -79,7 +79,7 @@ function detect(fileLoc)
 	#KNET LOAD BROKEN REPORT THIS!
 	#Knet.@load "EmRec256.jld2"
     Knet.@load "BIGEMREC.jld2"
-	println(model)
+	#println(model)
 
 	#model = deserialize("EmRec160")
 

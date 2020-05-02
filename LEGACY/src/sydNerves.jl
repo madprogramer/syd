@@ -100,6 +100,7 @@ function understand(sound,state)
 	emo = EmRec.detect(savefile)
 	#SydMouth.say(OutputName,wordsUnderstood)
 	println(comprehension)
+	println("Emotion read: $(emo)")
 
 	return respondTo(comprehension,state,emo)
 end
