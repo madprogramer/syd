@@ -1,2 +1,15 @@
+
+#Audio
 *.wav
+*.ogg
+
+#Storage
 *.bson
+
+#Models
+*.pb
+*.pbmm
+*.tflite
+*.trie
+
+notebooks/*.jld2
