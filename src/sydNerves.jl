@@ -81,6 +81,60 @@ function respondTo(understanding,state,emo)
 	return state
 end
 
+function respond2(understanding,state,positivity)
+	#println("Should respond to $(understanding)")
+
+	heard = understanding["semantics"]
+
+	#print(typeof(state), typeof(idle), state == "idle")
+
+	if state == "idle"
+		if occursin("HELLO",heard) || occursin("HI",heard) || occursin("YO",heard)
+			if emo == "joy"
+				SydMouth.say(OutputName,"You sure seem in good spirits today!")
+			else
+				SydMouth.say(OutputName,"Oh Hey!")
+			end
+		end
+		if occursin("PLAY",heard)
+			SydMouth.say(OutputName,"Unfortunately, I dunno a whole lot of songs, but let me see what I can do.")
+			read(`osascript AppleScripts/Play.applescript`)
+			read(`osascript AppleScripts/Play.applescript`)
+			state="playingSong"
+		end
+	#PlayingSong
+	elseif state == "playingSong"
+		if occursin("PAUSE",heard)
+			artistname = read(`osascript AppleScripts/GetArtist.applescript`)
+			read(`osascript AppleScripts/Pause.applescript`)
+			SydMouth.say(OutputName,"Ok, I paused.")
+			if emo == "joy"
+				SydMouth.say(OutputName,"You seem to like this song. It's by $(artistname). You might want to check them out.")
+			end
+			state="pausedSong"
+		end
+		if occursin("STOP",heard)
+			read(`osascript AppleScripts/Stop.applescript`)
+			SydMouth.say(OutputName,"As you wish.")
+			state="idle"
+		end
+	#PausedSong
+	elseif state == "pausedSong"
+		if occursin("PLAY",heard)
+			read(`osascript AppleScripts/Play.applescript`)
+			SydMouth.say(OutputName,"Continuing...")
+			state="playingSong"
+		end
+		if occursin("STOP",heard)
+			read(`osascript AppleScripts/Stop.applescript`)
+			SydMouth.say(OutputName,"As you wish")
+			state="idle"
+		end
+	end
+
+	return state
+end
+
 #What words does syd understand this recording as
 function understand(sound,state)
 	#println("NOW I UNDERSTAND")
@@ -97,12 +151,18 @@ function understand(sound,state)
 	# wordsUnderstood = read(`DeepSpeech/deepspeech --model DeepSpeech/models/output_graph.pbmm --audio $savefile`, String)
 	# println( wordsUnderstood )
 	comprehension = SydBrain.comprehend(read(`DeepSpeech/deepspeech --model DeepSpeech/models/output_graph.pbmm --audio $savefile`, String))
-	emo = EmRec.detect(savefile)
+	# emo = EmRec.detect(savefile)
+	pos = EmRec.positivity(savefile)
+
 	#SydMouth.say(OutputName,wordsUnderstood)
 	println(comprehension)
-	println("Emotion read: $(emo)")
+	# println("Emotion read: $(emo)")
+	println("Positivity read: $(pos)")
 
-	return respondTo(comprehension,state,emo)
+	# return respondTo(comprehension,state,emo)
+
+	print("IMPLEMENT RESPOND2")
+	#respond2(comprehension,state,pos)
 end
 
 #Save a recording to a file

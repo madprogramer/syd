@@ -40,7 +40,7 @@ using JLD2
 FRAME_LENGTH = 0.025 # ms
 FRAME_INTERVAL = 0.010 # ms
 
-export detect
+export detect, positivity
 
 
 function preprocess(wavFile)
@@ -105,6 +105,47 @@ function detect(fileLoc)
         end
     end
     return "neutral"
+end
+
+
+function positivity(fileLoc)
+
+    SAMPLES = (preprocess(fileLoc))
+    #LOAD MODEL
+    #model = Knet.load("EmRec256.jld2","model")
+    #println(size(SAMPLES))
+    L = size(SAMPLES)[1]
+
+    #KNET LOAD BROKEN REPORT THIS!
+    #Knet.@load "EmRec256.jld2"
+    Knet.@load "BIGEMREC.jld2"
+    #println(model)
+
+    #model = deserialize("EmRec160")
+
+    #println(summary(reshape(SAMPLES,26,1,598)))
+
+    #(model(reshape(SAMPLES,26,1,598)))
+    #reshape(Xs[1],26,1,328)
+
+    #TAG
+    tags = tag(model, 26, reshape(SAMPLES,26,1,L))
+    #COUNT TAG
+
+    pFrame = 0
+    if L > 50
+        k = 50
+        while L >= k+50
+            #IF THERE IS MORE JOY IN THIS FRAME THAN NEUTRAL, DETECT JOY!
+            #println(count( i->(i=="happy"), tags[k:k+50] ) / 50)
+            if count( i->(i=="happy"), tags[k:k+50] ) / 50 > 0.5  
+                pFrame+=1
+            end
+
+            k+=50
+        end
+    end
+    return pFrame
 end
 
 
