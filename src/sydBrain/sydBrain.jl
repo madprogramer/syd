@@ -96,6 +96,7 @@ function pickOut(words::AbstractString, target::sydWord)
 		end
 	end
 
+	# println("ADSKOK: $(newWords), $(words), $(target)")
 	return newWords
 end
 

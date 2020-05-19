@@ -39,7 +39,9 @@ mutable struct sydWord
     end   
 end
 
-Words = [sydWord("play"),sydWord("pause"),sydWord("stop"),sydWord("hi",1,1,0),sydWord("yo",0,0,0),sydWord("hello")]
+Words = [sydWord("play"),sydWord("pause"),sydWord("back"),sydWord("stop"),sydWord("hi",1,1,0),sydWord("yo",0,0,0),sydWord("hello"),
+         sydWord("volume"),sydWord("up",1,1,0),sydWord("raise"),sydWord("lowder"),sydWord("down"),sydWord("lower"),sydWord("mute"),sydWord("quiet"),
+         sydWord("sound"),sydWord("song")]
 
 end
 
