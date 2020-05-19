@@ -55,7 +55,7 @@ function basic()
 	#SydEar.startListening(InputName)
 	println("READY!")
 	while true
-		SydNerves.understand(SydEar.waitAndListen(InputName))
+		SydNerves.understand(SydEar.waitAndListen(InputName,trackupdates=false))
 	end
 end
 
@@ -72,13 +72,15 @@ function act(state)
 
 #Start Up
 if state  == "startUp"
+	R = SydNerves.init()
+	if R==-1 exit() end
 	SydMouth.say(OutputName,"syd is now Ready!")
 	println("syd is now Ready!")
 	state = "idle"
 #Idling
 elseif state == "idle"
 	#println("Idling")
-	state = SydNerves.understand(SydEar.waitAndListen(InputName),state)
+	state = SydNerves.understand(SydEar.waitAndListen(InputName,trackupdates=false),state)
 #PlayingSong
 elseif state  == "playingSong"
 	state = SydNerves.understand(SydEar.waitAndListen(InputName),state)

@@ -23,10 +23,16 @@ using .States
 include("./EmRec.jl")
 using .EmRec
 
-export wakeUp, respondTo
+export wakeUp, respondTo, init, updateTrack
 
+#Globals
 lastTrackPlaying = ""
 lastTrackScore = 0
+SongList = zeros(0)
+GenreList = zeros(0)
+ArtistList = zeros(0)
+SongScores = zeros(0)
+#Predictions =
 
 function updateTrack()
 	global lastTrackPlaying
@@ -74,8 +80,36 @@ function updateVolume(heard)
 		end
 	end
 
-
 	return false
+end
+
+
+#USE THIS TO SCAN ALL THE SONGS IN THE syd PLAYLISY
+function init()
+
+	global SongList,SongScores
+
+	#Check if syd playlist exists
+	#println("AM I SCANNING ALL THE SONGS?")
+
+	k = String(read(`osascript AppleScripts/GetSongNames.applescript`))
+
+	if k=="-1" 
+		SydMouth.say(OutputName,"Oh dear! Your Music App appears to be missing a playlist named syd. Please add your songs there first, before using me! Good bye.")
+		return -1 
+	end
+
+	SongList = split( chomp(String(k)) ,r", ")
+	GenreList = split( chomp(String(read(`osascript AppleScripts/GetGenres.applescript`))) ,r", ")
+	ArtistList = split( chomp(String(read(`osascript AppleScripts/GetArtists.applescript`))) ,r", ")
+
+	SongScores = zeros(size(SongList,1))
+
+	println(SongList)
+	println(GenreList)
+	println(ArtistList)
+	println(SongScores)
+
 end
 
 #RESPONSE
