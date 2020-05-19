@@ -35,19 +35,82 @@ SongScores = zeros(0)
 #Predictions =
 
 function updateScores(track,score)
+	global SongScores
+
+	track=chomp(track)	
+	println("TRACK:")
+	println(track)
+	println("TRACK END")
+	println(SongList)
+	SONGID = findfirst(isequal(track), SongList )
+	println(SONGID)
+	GENRE  = GenreList[SONGID]
+	ARTIST = ArtistList[SONGID]
+
+	L = size(SongList,1)
+
+	#Normalize Score
+	score = (score*1.0)/L
+
+	#Give Bonus score to same genre
+	sameGenres = findall(isequal(GENRE), GenreList)
+	SongScores[sameGenres] = SongScores[sameGenres] .+ score
+
+	#Give Bonus score to same artist
+	sameArtists = findall(isequal(ARTIST), ArtistList)
+	SongScores[sameArtists] = SongScores[sameArtists] .+ score
+
+	#Normalize ALL Scores
+	S = sum(SongScores)
+
+	SongScores=SongScores./S
+
+	println(SongScores)
 	
+	#println("SUM: $S")
+end
+
+function pickNextSong(track)
+	#Pick a song that wasn't the last track playing
+	global SongScores, SongList
+
+	track=chomp(track)	
+	prevSONGID = findfirst(isequal(track), SongList )
+
+	L = size(SongList,1)
+	CumSums = zeros(L)
+
+	for i in 1:L	
+		CumSums[i:L] = CumSums[i:L] .+ SongScores[i]
+	end
+
+	SONGID = 0
+	while true
+		#pick a random number in 0,1
+		target = rand(Float64)
+		SONGID = findfirst(isequal(1), (CumSums .> target) )
+		if prevSONGID == SONGID continue end
+		break
+	end
+
+	track = SongList[SONGID]
+	return track
 end
 
 #Track Changed
 function updateTrack()
 	global lastTrackPlaying
 	global lastTrackScore
-	currentTrackPlaying = String(read(`osascript AppleScripts/GetName.applescript`))
+
+	currentTrackPlaying = chomp(String(read(`osascript AppleScripts/GetName.applescript`)))
 	if currentTrackPlaying != lastTrackPlaying
 		println("Track changed to $(currentTrackPlaying)")
 		println("Previous track: $(lastTrackPlaying),\nScore: $(lastTrackScore)")
-		println("SAVE THESE SCORES SOMEWHERE!!!")
-		lastTrackPlaying = currentTrackPlaying
+		# println("SAVE THESE SCORES SOMEWHERE!!!")
+		updateScores(lastTrackPlaying,lastTrackScore)
+		toPlayNext = pickNextSong(lastTrackPlaying)
+		read(`osascript AppleScripts/PlaySpecific.applescript "$(toPlayNext)"`)
+		lastTrackPlaying = toPlayNext
 		lastTrackScore = 0
 	end
 end
@@ -74,7 +137,7 @@ function restartTrack(heard)
 	if occursin("RESTART",heard) || occursin("REPLAY",heard) || occursin("TOP",heard)
 		#SONGID = findfirst(isequal(lastTrackPlaying), SongList )
 		#SydMouth.say(OutputName,"This song is $(SongList[SONGID]) by $(ArtistList[SONGID])")
-		read(`osascript AppleScripts/RepeatTrack.applescript $(lastTrackPlaying)`)
+		read(`osascript AppleScripts/RepeatTrack.applescript "$(lastTrackPlaying)"`)
 		lastTrackScore += 10
 	end
 end
@@ -122,7 +185,7 @@ end
 #USE THIS TO SCAN ALL THE SONGS IN THE syd PLAYLISY
 function init()
 
-	global SongList,SongScores
+	global SongList,SongScores,GenreList,ArtistList
 
 	#Check if syd playlist exists
 	#println("AM I SCANNING ALL THE SONGS?")
@@ -262,6 +325,7 @@ function respond2(understanding,state,positivity)
 		#WE'RE BEING LAZY, IF SONG CHANGED BETWEEN AND NEITHER USER OR SYD NOTICE
 		#IT'S EQUIVALENT TO GIVING IT A 0
 
+		lastTrackScore+=positivity
 		updateTrack()
 
 		if occursin("PAUSE",heard) || occursin("BACK",heard)
@@ -290,6 +354,8 @@ function respond2(understanding,state,positivity)
 
 	#PausedSong
 	elseif state == "pausedSong"
+		lastTrackScore+=positivity
+
 		if occursin("PLAY",heard)
 			read(`osascript AppleScripts/Play.applescript`)
 			SydMouth.say(OutputName,"Continuing...")
