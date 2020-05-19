@@ -34,6 +34,10 @@ ArtistList = zeros(0)
 SongScores = zeros(0)
 #Predictions =
 
+function updateScores(track,score)
+	
+end
+
 #Track Changed
 function updateTrack()
 	global lastTrackPlaying
@@ -53,6 +57,7 @@ function songInfo(heard)
 	if occursin("ABOUT",heard) || occursin("INFO",heard)
 		SONGID = findfirst(isequal(lastTrackPlaying), SongList )
 		SydMouth.say(OutputName,"This song is $(SongList[SONGID]) by $(ArtistList[SONGID])")
+		lastTrackScore += 5	
 	end
 end
 
@@ -60,6 +65,7 @@ end
 function skipTrack(heard)
 	if occursin("SKIP",heard) || occursin("NEXT",heard)
 		read(`osascript AppleScripts/NextTrack.applescript`)
+		lastTrackScore -= 5	
 	end
 end
 
@@ -69,6 +75,7 @@ function restartTrack(heard)
 		#SONGID = findfirst(isequal(lastTrackPlaying), SongList )
 		#SydMouth.say(OutputName,"This song is $(SongList[SONGID]) by $(ArtistList[SONGID])")
 		read(`osascript AppleScripts/RepeatTrack.applescript $(lastTrackPlaying)`)
+		lastTrackScore += 10
 	end
 end
 
@@ -89,6 +96,7 @@ function updateVolume(heard)
 		elseif occursin("RAISE",heard) || occursin("UP",heard) || occursin("LOUDER",heard)
 			run(`osascript AppleScripts/VolumeRaise.applescript`)
 			return true
+			lastTrackScore += 2
 		end
 	else
 		#MUTE
@@ -103,6 +111,7 @@ function updateVolume(heard)
 		elseif occursin("RAISE",heard) || occursin("UP",heard) || occursin("LOUDER",heard)
 			run(`osascript AppleScripts/VolumeRaise.applescript`)
 			return true
+			lastTrackScore += 2
 		end
 	end
 
