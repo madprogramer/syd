@@ -67,6 +67,15 @@ function test()
 end
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+function dummy()
+	SydNerves.updateTrack()
+end
+
+function dummy2()
+	SydNerves.updateTrack()
+end
+
 #Take Action
 function act(state)
 
@@ -80,13 +89,13 @@ if state  == "startUp"
 #Idling
 elseif state == "idle"
 	#println("Idling")
-	state = SydNerves.understand(SydEar.waitAndListen(InputName,trackupdates=false),state)
+	state = SydNerves.understand(SydEar.waitAndListen(InputName,dummy2),state)
 #PlayingSong
 elseif state  == "playingSong"
-	state = SydNerves.understand(SydEar.waitAndListen(InputName),state)
+	state = SydNerves.understand(SydEar.waitAndListen(InputName,dummy),state)
 #PausedSong
 elseif state == "pausedSong"
-	state = SydNerves.understand(SydEar.waitAndListen(InputName),state)
+	state = SydNerves.understand(SydEar.waitAndListen(InputName,dummy),state)
 end
 
 #Return Last State

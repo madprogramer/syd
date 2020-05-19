@@ -16,7 +16,7 @@ square(x) = x^2;
 
 #Wait until syd hears a sound
 #Then begin capturing 0.5second frames for a maximum of 5 seconds
-function waitAndListen(from, trackupdates=true)
+function waitAndListen(from, updateFunction::Function=nothing)
 	println("Come on say something!")
 	attention = false
 	currentDuration = 0s
@@ -27,8 +27,8 @@ function waitAndListen(from, trackupdates=true)
         while(true)
 
             #Check for track updates
-            if trackupdates == true 
-                sydNerves.updateTrack()
+            if updateFunction != nothing
+                updateFunction()
             end
 
         	#print(currentDuration)
