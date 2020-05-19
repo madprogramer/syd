@@ -73,7 +73,7 @@ function dummy()
 end
 
 function dummy2()
-	SydNerves.updateTrack()
+	return
 end
 
 #Take Action

@@ -34,6 +34,7 @@ ArtistList = zeros(0)
 SongScores = zeros(0)
 #Predictions =
 
+#Track Changed
 function updateTrack()
 	global lastTrackPlaying
 	global lastTrackScore
@@ -47,6 +48,31 @@ function updateTrack()
 	end
 end
 
+#Song Info
+function songInfo(heard)
+	if occursin("ABOUT",heard) || occursin("INFO",heard)
+		SONGID = findfirst(isequal(lastTrackPlaying), SongList )
+		SydMouth.say(OutputName,"This song is $(SongList[SONGID]) by $(ArtistList[SONGID])")
+	end
+end
+
+#Skip Track
+function skipTrack(heard)
+	if occursin("SKIP",heard) || occursin("NEXT",heard)
+		read(`osascript AppleScripts/NextTrack.applescript`)
+	end
+end
+
+#Restart Track
+function restartTrack(heard)
+	if occursin("RESTART",heard) || occursin("REPLAY",heard) || occursin("TOP",heard)
+		#SONGID = findfirst(isequal(lastTrackPlaying), SongList )
+		#SydMouth.say(OutputName,"This song is $(SongList[SONGID]) by $(ArtistList[SONGID])")
+		read(`osascript AppleScripts/RepeatTrack.applescript $(lastTrackPlaying)`)
+	end
+end
+
+#Volume Updates
 function updateVolume(heard)
 	if occursin("VOLUME",heard) || occursin("SOUND",heard) || occursin("PLAY",heard) || occursin("SONG",heard)
 		println("VOLUME COMMAND RECEIVED")
@@ -103,7 +129,9 @@ function init()
 	GenreList = split( chomp(String(read(`osascript AppleScripts/GetGenres.applescript`))) ,r", ")
 	ArtistList = split( chomp(String(read(`osascript AppleScripts/GetArtists.applescript`))) ,r", ")
 
-	SongScores = zeros(size(SongList,1))
+	# SongScores = zeros(size(SongList,1))
+	L = size(SongList,1)
+	SongScores = fill(1/L, L)
 
 	println(SongList)
 	println(GenreList)
@@ -210,7 +238,7 @@ function respond2(understanding,state,positivity)
 			end
 		end
 		if occursin("PLAY",heard)
-			SydMouth.say(OutputName,"Unfortunately, I dunno a whole lot of songs, but let me see what I can do.")
+			SydMouth.say(OutputName,"Okay, here's a song from your playlist")
 			read(`osascript AppleScripts/Play.applescript`)
 			read(`osascript AppleScripts/Play.applescript`)
 			lastTrackPlaying = String(read(`osascript AppleScripts/GetName.applescript`))
@@ -218,6 +246,7 @@ function respond2(understanding,state,positivity)
 			println("NOW PLAYING $(lastTrackPlaying)")
 			state="playingSong"
 		end
+
 	#PlayingSong
 	elseif state == "playingSong"
 		#CHECK IF SONG CHANGED
@@ -242,7 +271,14 @@ function respond2(understanding,state,positivity)
 		end
 
 		updateVolume(heard)
+		songInfo()
 
+		#INSERT REWIND
+		restartTrack()
+
+		#INSERT SKIP
+		skipTrack()
+		
 	#PausedSong
 	elseif state == "pausedSong"
 		if occursin("PLAY",heard)
@@ -259,10 +295,13 @@ function respond2(understanding,state,positivity)
 		updateVolume(heard)
 
 		#INSERT SONG INFO
+		songInfo()
 
 		#INSERT REWIND
+		restartTrack()
 
 		#INSERT SKIP
+		skipTrack()
 
 	end
 
