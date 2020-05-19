@@ -38,12 +38,12 @@ function updateScores(track,score)
 	global SongScores
 
 	track=chomp(track)	
-	println("TRACK:")
-	println(track)
-	println("TRACK END")
-	println(SongList)
+	# println("TRACK:")
+	# println(track)
+	# println("TRACK END")
+	# println(SongList)
 	SONGID = findfirst(isequal(track), SongList )
-	println(SONGID)
+	# println(SONGID)
 	GENRE  = GenreList[SONGID]
 	ARTIST = ArtistList[SONGID]
 
@@ -104,8 +104,8 @@ function updateTrack()
 
 	currentTrackPlaying = chomp(String(read(`osascript AppleScripts/GetName.applescript`)))
 	if currentTrackPlaying != lastTrackPlaying
-		println("Track changed to $(currentTrackPlaying)")
-		println("Previous track: $(lastTrackPlaying),\nScore: $(lastTrackScore)")
+		# println("Track changed to $(currentTrackPlaying)")
+		# println("Previous track: $(lastTrackPlaying),\nScore: $(lastTrackScore)")
 		# println("SAVE THESE SCORES SOMEWHERE!!!")
 		updateScores(lastTrackPlaying,lastTrackScore)
 		toPlayNext = pickNextSong(lastTrackPlaying)
@@ -117,6 +117,7 @@ end
 
 #Song Info
 function songInfo(heard)
+	global lastTrackScore
 	if occursin("ABOUT",heard) || occursin("INFO",heard)
 		SONGID = findfirst(isequal(lastTrackPlaying), SongList )
 		SydMouth.say(OutputName,"This song is $(SongList[SONGID]) by $(ArtistList[SONGID])")
@@ -126,6 +127,7 @@ end
 
 #Skip Track
 function skipTrack(heard)
+	global lastTrackScore
 	if occursin("SKIP",heard) || occursin("NEXT",heard)
 		read(`osascript AppleScripts/NextTrack.applescript`)
 		lastTrackScore -= 5	
@@ -134,6 +136,7 @@ end
 
 #Restart Track
 function restartTrack(heard)
+	global lastTrackScore
 	if occursin("RESTART",heard) || occursin("REPLAY",heard) || occursin("TOP",heard)
 		#SONGID = findfirst(isequal(lastTrackPlaying), SongList )
 		#SydMouth.say(OutputName,"This song is $(SongList[SONGID]) by $(ArtistList[SONGID])")
@@ -144,8 +147,9 @@ end
 
 #Volume Updates
 function updateVolume(heard)
+	global lastTrackScore
 	if occursin("VOLUME",heard) || occursin("SOUND",heard) || occursin("PLAY",heard) || occursin("SONG",heard)
-		println("VOLUME COMMAND RECEIVED")
+		# println("VOLUME COMMAND RECEIVED")
 
 		#MUTE
 		if occursin("MUTE",heard) || occursin("QUIET",heard)
