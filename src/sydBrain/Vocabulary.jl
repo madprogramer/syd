@@ -23,11 +23,11 @@ mutable struct sydWord
     fuzzyWordString::String
 
     function sydWord(a)
-    new(uppercase(a), a, 2, 2, 2, FuzzyWordString(a,2,2)) 
+    new(uppercase(a), a, 1, 1, 1, FuzzyWordString(a,1,1)) 
     end   
 
     function sydWord(a, c, d)
-    new(uppercase(a), a, c, d, 2, FuzzyWordString(a,c,d)) 
+    new(uppercase(a), a, c, d, 1, FuzzyWordString(a,c,d)) 
     end   
 
     function sydWord(a, b, c, d)

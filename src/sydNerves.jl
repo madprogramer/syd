@@ -90,7 +90,7 @@ function respond2(understanding,state,positivity)
 
 	if state == "idle"
 		if occursin("HELLO",heard) || occursin("HI",heard) || occursin("YO",heard)
-			if emo == "joy"
+			if positivity > 1
 				SydMouth.say(OutputName,"You sure seem in good spirits today!")
 			else
 				SydMouth.say(OutputName,"Oh Hey!")
@@ -108,7 +108,7 @@ function respond2(understanding,state,positivity)
 			artistname = read(`osascript AppleScripts/GetArtist.applescript`)
 			read(`osascript AppleScripts/Pause.applescript`)
 			SydMouth.say(OutputName,"Ok, I paused.")
-			if emo == "joy"
+			if positivity > 1
 				SydMouth.say(OutputName,"You seem to like this song. It's by $(artistname). You might want to check them out.")
 			end
 			state="pausedSong"
@@ -161,8 +161,8 @@ function understand(sound,state)
 
 	# return respondTo(comprehension,state,emo)
 
-	print("IMPLEMENT RESPOND2")
-	#respond2(comprehension,state,pos)
+	# print("IMPLEMENT RESPOND2")
+	respond2(comprehension,state,pos)
 end
 
 #Save a recording to a file
