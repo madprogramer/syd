@@ -25,9 +25,27 @@ using .EmRec
 
 export wakeUp, respondTo
 
+lastTrackPlaying = ""
+lastTrackScore = 0
+
+function updateTrack()
+	global lastTrackPlaying
+	global lastTrackScore
+	currentTrackPlaying = String(read(`osascript AppleScripts/GetName.applescript`))
+	if currentTrackPlaying != lastTrackPlaying
+		println("Track changed to $(currentTrackPlaying)")
+		println("Previous track: $(lastTrackPlaying),\nScore: $(lastTrackScore)")
+		println("SAVE THESE SCORES SOMEWHERE!!!")
+		lastTrackPlaying = currentTrackPlaying
+		lastTrackScore = 0
+	end
+end
 
 #RESPONSE
 function respondTo(understanding,state,emo)
+	global lastTrackPlaying
+	global lastTrackScore
+
 	#println("Should respond to $(understanding)")
 
 	heard = understanding["semantics"]
@@ -46,12 +64,23 @@ function respondTo(understanding,state,emo)
 			SydMouth.say(OutputName,"Unfortunately, I dunno a whole lot of songs, but let me see what I can do.")
 			read(`osascript AppleScripts/Play.applescript`)
 			read(`osascript AppleScripts/Play.applescript`)
+			lastTrackPlaying = String(read(`osascript AppleScripts/GetName.applescript`))
+			lastTrackScore = 0
+			println("NOW PLAYING $(lastTrackPlaying)")
 			state="playingSong"
 		end
 	#PlayingSong
 	elseif state == "playingSong"
+
+		#CHECK IF SONG CHANGED
+		#WE'RE BEING LAZY, IF SONG CHANGED BETWEEN AND NEITHER USER OR SYD NOTICE
+		#IT'S EQUIVALENT TO GIVING IT A 0
+
+		updateTrack()
+
+		#COMMANDS
 		if occursin("PAUSE",heard)
-			artistname = read(`osascript AppleScripts/GetArtist.applescript`)
+			artistname = String(read(`osascript AppleScripts/GetArtist.applescript`))
 			read(`osascript AppleScripts/Pause.applescript`)
 			SydMouth.say(OutputName,"Ok, I paused.")
 			if emo == "joy"
@@ -64,6 +93,17 @@ function respondTo(understanding,state,emo)
 			SydMouth.say(OutputName,"As you wish.")
 			state="idle"
 		end
+
+		#INSERT VOLUME UP
+
+		#INSERT VOLUME DOWN
+
+		#INSERT SONG INFO
+
+		#INSERT REWIND
+
+		#INSERT SKIP
+
 	#PausedSong
 	elseif state == "pausedSong"
 		if occursin("PLAY",heard)
@@ -83,6 +123,8 @@ end
 
 function respond2(understanding,state,positivity)
 	#println("Should respond to $(understanding)")
+	global lastTrackPlaying
+	global lastTrackScore
 
 	heard = understanding["semantics"]
 
@@ -100,12 +142,21 @@ function respond2(understanding,state,positivity)
 			SydMouth.say(OutputName,"Unfortunately, I dunno a whole lot of songs, but let me see what I can do.")
 			read(`osascript AppleScripts/Play.applescript`)
 			read(`osascript AppleScripts/Play.applescript`)
+			lastTrackPlaying = String(read(`osascript AppleScripts/GetName.applescript`))
+			lastTrackScore = 0
+			println("NOW PLAYING $(lastTrackPlaying)")
 			state="playingSong"
 		end
 	#PlayingSong
 	elseif state == "playingSong"
+		#CHECK IF SONG CHANGED
+		#WE'RE BEING LAZY, IF SONG CHANGED BETWEEN AND NEITHER USER OR SYD NOTICE
+		#IT'S EQUIVALENT TO GIVING IT A 0
+
+		updateTrack()
+
 		if occursin("PAUSE",heard)
-			artistname = read(`osascript AppleScripts/GetArtist.applescript`)
+			artistname = String(read(`osascript AppleScripts/GetArtist.applescript`))
 			read(`osascript AppleScripts/Pause.applescript`)
 			SydMouth.say(OutputName,"Ok, I paused.")
 			if positivity > 1
@@ -131,6 +182,16 @@ function respond2(understanding,state,positivity)
 			state="idle"
 		end
 	end
+
+	#INSERT VOLUME UP
+
+	#INSERT VOLUME DOWN
+
+	#INSERT SONG INFO
+
+	#INSERT REWIND
+
+	#INSERT SKIP
 
 	return state
 end
