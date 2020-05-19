@@ -239,8 +239,8 @@ function respond2(understanding,state,positivity)
 		end
 		if occursin("PLAY",heard)
 			SydMouth.say(OutputName,"Okay, here's a song from your playlist")
-			read(`osascript AppleScripts/Play.applescript`)
-			read(`osascript AppleScripts/Play.applescript`)
+			read(`osascript AppleScripts/FirstPlay.applescript`)
+			# read(`osascript AppleScripts/Play.applescript`)
 			lastTrackPlaying = String(read(`osascript AppleScripts/GetName.applescript`))
 			lastTrackScore = 0
 			println("NOW PLAYING $(lastTrackPlaying)")
@@ -271,14 +271,14 @@ function respond2(understanding,state,positivity)
 		end
 
 		updateVolume(heard)
-		songInfo()
+		songInfo(heard)
 
 		#INSERT REWIND
-		restartTrack()
+		restartTrack(heard)
 
 		#INSERT SKIP
-		skipTrack()
-		
+		skipTrack(heard)
+
 	#PausedSong
 	elseif state == "pausedSong"
 		if occursin("PLAY",heard)
@@ -295,13 +295,13 @@ function respond2(understanding,state,positivity)
 		updateVolume(heard)
 
 		#INSERT SONG INFO
-		songInfo()
+		songInfo(heard)
 
 		#INSERT REWIND
-		restartTrack()
+		restartTrack(heard)
 
 		#INSERT SKIP
-		skipTrack()
+		skipTrack(heard)
 
 	end
 
