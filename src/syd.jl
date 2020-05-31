@@ -24,6 +24,11 @@ DenseRelu(i::Int,o::Int,f=relu) = DenseRelu(param(o,i), param0(o), f)
 
 module syd
 
+# Makie
+
+using Makie
+import AbstractPlotting: pixelarea
+
 #Imports
 include("./sydEar.jl")
 include("./sydMouth.jl")
@@ -77,7 +82,7 @@ function dummy2()
 end
 
 #Take Action
-function act(state)
+function act(state, DISPLAYSCENE)
 
 #Start Up
 if state  == "startUp"
@@ -106,7 +111,13 @@ return state end
 function main()
 MENTALSTATE = "startUp"
 while true
-	MENTALSTATE=act(MENTALSTATE)
+
+	#GET A NEW SCENE
+	DISPLAYSCENE = Scene(resolution=(900,1600))
+
+	#Experiment using IJulia!
+
+	MENTALSTATE=act(MENTALSTATE,DISPLAYSCENE)
 end
 end
 
