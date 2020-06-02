@@ -82,24 +82,32 @@ function dummy2()
 end
 
 #Take Action
-function act(state, DISPLAYSCENE)
+function act(state, SCENECOMPONENTS)
 
 #Start Up
 if state  == "startUp"
+	delete!(SCENECOMPONENTS["status"], SCENECOMPONENTS["status"][end])
+	text!(SCENECOMPONENTS["status"],"Loading...",textsize=6 )
 	R = SydNerves.init()
 	if R==-1 exit() end
 	SydMouth.say(OutputName,"syd is now Ready!")
-	println("syd is now Ready!")
+	# println("syd is now Ready!")
 	state = "idle"
 #Idling
 elseif state == "idle"
 	#println("Idling")
+	delete!(SCENECOMPONENTS["status"], SCENECOMPONENTS["status"][end])
+	text!(SCENECOMPONENTS["status"],"Ready",textsize=6 )
 	state = SydNerves.understand(SydEar.waitAndListen(InputName,dummy2),state)
 #PlayingSong
 elseif state  == "playingSong"
+	delete!(SCENECOMPONENTS["status"], SCENECOMPONENTS["status"][end])
+	text!(SCENECOMPONENTS["status"],"Playing",textsize=6 )
 	state = SydNerves.understand(SydEar.waitAndListen(InputName,dummy),state)
 #PausedSong
 elseif state == "pausedSong"
+	delete!(SCENECOMPONENTS["status"], SCENECOMPONENTS["status"][end])
+	text!(SCENECOMPONENTS["status"],"Paused",textsize=6 )
 	state = SydNerves.understand(SydEar.waitAndListen(InputName,dummy),state)
 end
 
@@ -110,15 +118,71 @@ return state end
 #Main Function Call
 function main()
 MENTALSTATE = "startUp"
-while true
 
-	#GET A NEW SCENE
-	DISPLAYSCENE = Scene(resolution=(900,1600))
-
-	#Experiment using IJulia!
-
-	MENTALSTATE=act(MENTALSTATE,DISPLAYSCENE)
+#GET A NEW SCENE USING MAKIE
+DISPLAYSCENE = Scene(resolution=(900,1200))
+SCENECOMPONENTS = Dict()
+#Excitement Tracker
+area1 = map(pixelarea(DISPLAYSCENE)) do hh
+    pad, w, h = 30, 870, 185
+    FRect(Point2f0(30, 30), Point2f0(w,h))
 end
+
+#Voice Tracker
+area2 = map(pixelarea(DISPLAYSCENE)) do hh
+    pad, w, h = 30, 870, 185
+    FRect(Point2f0(30, h+2*pad), Point2f0(w,h))
+end
+
+#Syd is listening/thinking indicator
+area3 = map(pixelarea(DISPLAYSCENE)) do hh
+    pad, w, h = 30, 870, 185
+    FRect(Point2f0(30, 2*h+2*pad), Point2f0(w,h))
+end
+
+#Add confidence
+
+#Misc. Text
+
+#Syd is listening/thinking indicator
+area4 = map(pixelarea(DISPLAYSCENE)) do hh
+    pad, w, h = 30, 870, 185
+    FRect(Point2f0(30, 3*h+2*pad), Point2f0(w,h))
+end
+
+#Syd is listening/thinking indicator
+area5 = map(pixelarea(DISPLAYSCENE)) do hh
+    pad, w, h = 30, 870, 185
+    FRect(Point2f0(30, 4*h+2*pad), Point2f0(w,h))
+end
+
+scene1 = Scene(DISPLAYSCENE, area1)
+scene2 = Scene(DISPLAYSCENE, area2)
+scene3 = Scene(DISPLAYSCENE, area3)
+scene4 = Scene(DISPLAYSCENE, area4)
+scene5 = Scene(DISPLAYSCENE, area5)
+
+lines!(scene1, 1:100, rand(100),color="orange")[end]
+lines!(scene2, 1:100, rand(100), color="blue")[end]
+text!(scene3,"Society",textsize=6,show_axis=false )
+#lines!(scene3, 1:100, rand(100), color="blue")[end]
+#lines!(scene4, 1:100, rand(100), color="red")[end]
+text!(scene4,"Initializing...",textsize=6,show_axis=false )
+text!(scene5," ",textsize=6,show_axis=false )
+#syd is listening...
+
+SCENECOMPONENTS["excitement"] = scene1
+SCENECOMPONENTS["sound"] = scene2
+SCENECOMPONENTS["text"] = scene3
+SCENECOMPONENTS["status"] = scene4
+SCENECOMPONENTS["listening"] = scene5
+
+#DISPLAYSCENE
+display(DISPLAYSCENE)
+while true
+	MENTALSTATE=act(MENTALSTATE,SCENECOMPONENTS)
+end
+
 end
 
 

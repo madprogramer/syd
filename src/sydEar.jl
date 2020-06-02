@@ -28,6 +28,7 @@ function waitAndListen(from, updateFunction::Function=nothing)
 
             #Check for track updates
             if updateFunction != nothing
+                print("syd is now listening")
                 updateFunction()
             end
 
@@ -49,6 +50,8 @@ function waitAndListen(from, updateFunction::Function=nothing)
             else
             	currentDuration += listenDuration
             	fullbuf = vcat(fullbuf,lastbuf)
+
+                print("syd is now thinking")
                 return fullbuf
             end
         end
