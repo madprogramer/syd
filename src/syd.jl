@@ -60,7 +60,7 @@ function basic()
 	#SydEar.startListening(InputName)
 	println("READY!")
 	while true
-		SydNerves.understand(SydEar.waitAndListen(InputName,trackupdates=false))
+		SydNerves.understand(SydEar.waitAndListen(InputName,SCENECOMPONENTS,trackupdates=false))
 	end
 end
 
@@ -98,17 +98,17 @@ elseif state == "idle"
 	#println("Idling")
 	delete!(SCENECOMPONENTS["status"], SCENECOMPONENTS["status"][end])
 	text!(SCENECOMPONENTS["status"],"Ready",textsize=6 )
-	state = SydNerves.understand(SydEar.waitAndListen(InputName,dummy2),state)
+	state = SydNerves.understand(SydEar.waitAndListen(InputName,SCENECOMPONENTS,dummy2),state)
 #PlayingSong
 elseif state  == "playingSong"
 	delete!(SCENECOMPONENTS["status"], SCENECOMPONENTS["status"][end])
 	text!(SCENECOMPONENTS["status"],"Playing",textsize=6 )
-	state = SydNerves.understand(SydEar.waitAndListen(InputName,dummy),state)
+	state = SydNerves.understand(SydEar.waitAndListen(InputName,SCENECOMPONENTS,dummy),state)
 #PausedSong
 elseif state == "pausedSong"
 	delete!(SCENECOMPONENTS["status"], SCENECOMPONENTS["status"][end])
 	text!(SCENECOMPONENTS["status"],"Paused",textsize=6 )
-	state = SydNerves.understand(SydEar.waitAndListen(InputName,dummy),state)
+	state = SydNerves.understand(SydEar.waitAndListen(InputName,SCENECOMPONENTS,dummy),state)
 end
 
 #Return Last State
@@ -168,7 +168,7 @@ text!(scene3,"Society",textsize=6,show_axis=false )
 #lines!(scene3, 1:100, rand(100), color="blue")[end]
 #lines!(scene4, 1:100, rand(100), color="red")[end]
 text!(scene4,"Initializing...",textsize=6,show_axis=false )
-text!(scene5," ",textsize=6,show_axis=false )
+text!(scene5," ",textsize=5,show_axis=false )
 #syd is listening...
 
 SCENECOMPONENTS["excitement"] = scene1

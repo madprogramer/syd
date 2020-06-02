@@ -2,6 +2,11 @@ module SydEar
 
 using PortAudio, SampledSignals, LibSndFile
 
+# Makie
+
+using Makie
+import AbstractPlotting: pixelarea
+
 #include("./sydNerves.jl")
 #using .sydNerves
 
@@ -16,7 +21,7 @@ square(x) = x^2;
 
 #Wait until syd hears a sound
 #Then begin capturing 0.5second frames for a maximum of 5 seconds
-function waitAndListen(from, updateFunction::Function=nothing)
+function waitAndListen(from, SCENECOMPONENTS, updateFunction::Function=nothing)
 	println("Come on say something!")
 	attention = false
 	currentDuration = 0s
@@ -28,7 +33,10 @@ function waitAndListen(from, updateFunction::Function=nothing)
 
             #Check for track updates
             if updateFunction != nothing
-                print("syd is now listening")
+                # print("syd is now listening")
+                delete!(SCENECOMPONENTS["listening"], SCENECOMPONENTS["listening"][end])
+                text!(SCENECOMPONENTS["listening"],"syd is listening...",textsize=5 )
+
                 updateFunction()
             end
 
@@ -51,7 +59,8 @@ function waitAndListen(from, updateFunction::Function=nothing)
             	currentDuration += listenDuration
             	fullbuf = vcat(fullbuf,lastbuf)
 
-                print("syd is now thinking")
+                delete!(SCENECOMPONENTS["listening"], SCENECOMPONENTS["listening"][end])
+                text!(SCENECOMPONENTS["listening"],"syd is thinking...",textsize=5 )
                 return fullbuf
             end
         end
