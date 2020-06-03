@@ -88,7 +88,7 @@ function act(state, SCENECOMPONENTS)
 if state  == "startUp"
 	delete!(SCENECOMPONENTS["status"], SCENECOMPONENTS["status"][end])
 	text!(SCENECOMPONENTS["status"],"Loading...",textsize=6 )
-	R = SydNerves.init()
+	R = SydNerves.init(SCENECOMPONENTS)
 	if R==-1 exit() end
 	SydMouth.say(OutputName,"syd is now Ready!")
 	# println("syd is now Ready!")
@@ -121,7 +121,7 @@ MENTALSTATE = "startUp"
 
 #GET A NEW SCENE USING MAKIE
 DISPLAYSCENE = Scene(resolution=(900,1200))
-SCENECOMPONENTS = Dict()
+SCENECOMPONENTS = Dict{String,Any}()
 #Excitement Tracker
 area1 = map(pixelarea(DISPLAYSCENE)) do hh
     pad, w, h = 30, 870, 185
@@ -162,9 +162,9 @@ scene3 = Scene(DISPLAYSCENE, area3)
 scene4 = Scene(DISPLAYSCENE, area4)
 scene5 = Scene(DISPLAYSCENE, area5)
 
-lines!(scene1, 1:100, zeros(100),color="orange")[end]
-lines!(scene2, 1:480000, zeros(480000), color="blue")[end]
-text!(scene3,"Society",textsize=6,show_axis=false )
+lines!(scene1, 1:1300, zeros(1310),color="orange")[end]
+lines!(scene2, 1:360000, zeros(360000), color="blue" )[end]
+text!(scene3," ",textsize=6,show_axis=false )
 #lines!(scene3, 1:100, rand(100), color="blue")[end]
 #lines!(scene4, 1:100, rand(100), color="red")[end]
 text!(scene4,"Initializing...",textsize=6,show_axis=false )
@@ -173,7 +173,7 @@ text!(scene5," ",textsize=5,show_axis=false )
 
 SCENECOMPONENTS["excitement"] = scene1
 SCENECOMPONENTS["sound"] = scene2
-SCENECOMPONENTS["text"] = scene3
+SCENECOMPONENTS["confidence"] = scene3
 SCENECOMPONENTS["status"] = scene4
 SCENECOMPONENTS["listening"] = scene5
 

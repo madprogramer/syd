@@ -145,7 +145,9 @@ function positivity(fileLoc)
             k+=50
         end
     end
-    return pFrame
+
+    #print(size(Array{Int8}(tags.=="happy")))
+    return Dict("raw"=>collect(eachrow(tags.=="happy")),"positivity"=>pFrame)
 end
 
 

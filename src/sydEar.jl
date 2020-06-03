@@ -54,7 +54,7 @@ function waitAndListen(from, SCENECOMPONENTS, updateFunction::Function=nothing)
                     fullbuf = vcat(fullbuf,lastbuf)
                     #try updating buffer in realtime, try fullbuff only otherwise
                     delete!(SCENECOMPONENTS["sound"], SCENECOMPONENTS["sound"][end])
-                    lines!(SCENECOMPONENTS["sound"], 1:length(fullbuf[:,1]), fullbuf[:,1], color="blue")[end]
+                    lines!(SCENECOMPONENTS["sound"], 1:length(fullbuf[:,1]), fullbuf[:,1], color="blue",show_axis=false )[end]
 
                 end
             elseif attention == false
@@ -66,7 +66,7 @@ function waitAndListen(from, SCENECOMPONENTS, updateFunction::Function=nothing)
                 #print("BOI: ")
                 #println(size(fullbuf))
                 delete!(SCENECOMPONENTS["sound"], SCENECOMPONENTS["sound"][end])
-                lines!(SCENECOMPONENTS["sound"], 1:length(fullbuf[:,1]), fullbuf[:,1], color="blue")[end]
+                lines!(SCENECOMPONENTS["sound"], 1:length(fullbuf[:,1]), fullbuf[:,1], color="blue",show_axis=false )[end]
 
                 delete!(SCENECOMPONENTS["listening"], SCENECOMPONENTS["listening"][end])
                 text!(SCENECOMPONENTS["listening"],"syd is thinking...",textsize=6 )

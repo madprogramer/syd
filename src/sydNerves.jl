@@ -1,5 +1,10 @@
 module SydNerves
 
+# Makie
+
+using Makie
+import AbstractPlotting: pixelarea
+
 #Globals 
 InputName = "Built-in Microphone"
 OutputName = "Built-in Output"
@@ -32,6 +37,7 @@ SongList = zeros(0)
 GenreList = zeros(0)
 ArtistList = zeros(0)
 SongScores = zeros(0)
+SCENECOMPONENTS = Dict{String,Any}()
 #Predictions =
 
 function updateScores(track,score)
@@ -94,7 +100,27 @@ function pickNextSong(track)
 	end
 
 	track = SongList[SONGID]
-	return track
+	score = SongScores[SONGID]
+	return Dict("track"=>track,"score"=>score)
+
+end
+
+function scoreSong(SCORE)
+
+	liking = ""
+	if SCORE < 0.2
+		liking = "Let's try something different."
+	elseif SCORE < 0.5
+		liking = "How about something unusual?"
+	elseif SCORE < 0.8
+		liking = "You might like this."
+	else
+		liking = "I'm certain you'll like this!"
+	end
+
+    delete!(SCENECOMPONENTS["confidence"], SCENECOMPONENTS["confidence"][end])
+    text!(SCENECOMPONENTS["confidence"],liking,textsize=6 )
+
 end
 
 #Track Changed
@@ -108,8 +134,13 @@ function updateTrack()
 		# println("Previous track: $(lastTrackPlaying),\nScore: $(lastTrackScore)")
 		# println("SAVE THESE SCORES SOMEWHERE!!!")
 		updateScores(lastTrackPlaying,lastTrackScore)
-		toPlayNext = pickNextSong(lastTrackPlaying)
+		NEXTSONG = pickNextSong(lastTrackPlaying)
+
+		toPlayNext = NEXTSONG["track"]
 		read(`osascript AppleScripts/PlaySpecific.applescript "$(toPlayNext)"`)
+
+		scoreSong(NEXTSONG["score"])
+
 		lastTrackPlaying = toPlayNext
 		lastTrackScore = 0
 	end
@@ -187,7 +218,7 @@ end
 
 
 #USE THIS TO SCAN ALL THE SONGS IN THE syd PLAYLISY
-function init()
+function init(sceneDict)
 
 	global SongList,SongScores,GenreList,ArtistList
 
@@ -214,6 +245,9 @@ function init()
 	println(ArtistList)
 	println(SongScores)
 
+	#Register Scenes
+	global SCENECOMPONENTS
+	SCENECOMPONENTS = sceneDict
 end
 
 #RESPONSE
@@ -345,6 +379,9 @@ function respond2(understanding,state,positivity)
 			read(`osascript AppleScripts/Stop.applescript`)
 			SydMouth.say(OutputName,"As you wish.")
 			state="idle"
+
+			delete!(SCENECOMPONENTS["confidence"], SCENECOMPONENTS["confidence"][end])
+    		text!(SCENECOMPONENTS["confidence"]," ",textsize=6 )
 		end
 
 		updateVolume(heard)
@@ -404,7 +441,18 @@ function understand(sound,state)
 	# println( wordsUnderstood )
 	comprehension = SydBrain.comprehend(read(`DeepSpeech/deepspeech --model DeepSpeech/models/output_graph.pbmm --audio $savefile`, String))
 	# emo = EmRec.detect(savefile)
-	pos = EmRec.positivity(savefile)
+	TP = EmRec.positivity(savefile)
+
+	pos = TP["positivity"]
+	raw = TP["raw"]
+
+	# println(raw)
+
+	#Emotion Tracking
+	# println("UPDATE EXCITEMENT")
+	# println(raw)
+    delete!(SCENECOMPONENTS["excitement"], SCENECOMPONENTS["excitement"][end])
+    lines!(SCENECOMPONENTS["excitement"], 1:length(raw[1]), raw[1], color="orange" )[end]
 
 	#SydMouth.say(OutputName,wordsUnderstood)
 	println(comprehension)
