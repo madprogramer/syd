@@ -162,8 +162,8 @@ scene3 = Scene(DISPLAYSCENE, area3)
 scene4 = Scene(DISPLAYSCENE, area4)
 scene5 = Scene(DISPLAYSCENE, area5)
 
-lines!(scene1, 1:100, rand(100),color="orange")[end]
-lines!(scene2, 1:100, rand(100), color="blue")[end]
+lines!(scene1, 1:100, zeros(100),color="orange")[end]
+lines!(scene2, 1:480000, zeros(480000), color="blue")[end]
 text!(scene3,"Society",textsize=6,show_axis=false )
 #lines!(scene3, 1:100, rand(100), color="blue")[end]
 #lines!(scene4, 1:100, rand(100), color="red")[end]

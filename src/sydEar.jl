@@ -35,7 +35,7 @@ function waitAndListen(from, SCENECOMPONENTS, updateFunction::Function=nothing)
             if updateFunction != nothing
                 # print("syd is now listening")
                 delete!(SCENECOMPONENTS["listening"], SCENECOMPONENTS["listening"][end])
-                text!(SCENECOMPONENTS["listening"],"syd is listening...",textsize=5 )
+                text!(SCENECOMPONENTS["listening"],"syd is listening...",textsize=6 )
 
                 updateFunction()
             end
@@ -48,9 +48,13 @@ function waitAndListen(from, SCENECOMPONENTS, updateFunction::Function=nothing)
                     attention = true
                     fullbuf = lastbuf
                 else
-                    #println("YOU HAVE MY ATTENTION!")
+                    # println("YOU HAVE MY ATTENTION!")
+                    # println(fullbuf[:,1])
                     currentDuration += listenDuration
                     fullbuf = vcat(fullbuf,lastbuf)
+                    #try updating buffer in realtime, try fullbuff only otherwise
+                    delete!(SCENECOMPONENTS["sound"], SCENECOMPONENTS["sound"][end])
+                    lines!(SCENECOMPONENTS["sound"], 1:length(fullbuf[:,1]), fullbuf[:,1], color="blue")[end]
 
                 end
             elseif attention == false
@@ -59,8 +63,15 @@ function waitAndListen(from, SCENECOMPONENTS, updateFunction::Function=nothing)
             	currentDuration += listenDuration
             	fullbuf = vcat(fullbuf,lastbuf)
 
+                #print("BOI: ")
+                #println(size(fullbuf))
+                delete!(SCENECOMPONENTS["sound"], SCENECOMPONENTS["sound"][end])
+                lines!(SCENECOMPONENTS["sound"], 1:length(fullbuf[:,1]), fullbuf[:,1], color="blue")[end]
+
                 delete!(SCENECOMPONENTS["listening"], SCENECOMPONENTS["listening"][end])
-                text!(SCENECOMPONENTS["listening"],"syd is thinking...",textsize=5 )
+                text!(SCENECOMPONENTS["listening"],"syd is thinking...",textsize=6 )
+
+                #Update
                 return fullbuf
             end
         end
