@@ -23,6 +23,4 @@ See [logs](/logs) for more details.
 1. Download v0.0.3 from Releases
 2. Make sure iTunes/Apple Music is launched.
 3. Run with 
-```bash
-julia ./bin/serverinteractive```
-from **inside /syd**
+`julia syd.jl` from inside `src/`
