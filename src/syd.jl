@@ -119,6 +119,14 @@ return state end
 function main()
 MENTALSTATE = "startUp"
 
+#Ask for input device
+println("Specify Input Device name, hit enter for default:")
+IN = readline(stdin)
+
+if IN != ""
+	InputName = IN
+end
+
 #GET A NEW SCENE USING MAKIE
 DISPLAYSCENE = Scene(resolution=(900,1200))
 SCENECOMPONENTS = Dict{String,Any}()
